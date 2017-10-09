@@ -13,126 +13,6 @@
     letter-spacing: -1px;
 }
 
-.text_bld {
-    font-weight: bold;
-}
-
-.text_ital{
-  font-style: italic;
-}
-
-
-/*--for forms with client-side validation on input and focus--*/
-
-input, textarea {
-  border: 1px solid #aaa;
-  box-shadow: 0px 0px 3px #ccc, 0 10px 15px #eee inset;
-  border-radius: 2px; 
-  padding: 4px;
-
-}
-
-input:focus, textarea:focus {
-  background: #fff;
-  border: 1px solid #555;
-  box-shadow: 0 0 3px #aaa;
-
-}
-
-textarea {
-  overflow: auto;
-  padding-top: 5px;
-}
-
-input#submit {
-  color: #555;
-  font-weight: bold;
-
-}
-
-label {
-  padding-top: 10px;
-  display: block;
-  font-weight: bold;
-
-}
-
-legend {
-  
-  font-weight: bold;
-  color: #555;
-}
-
-
-fieldset {
-  border: 1px solid #555;
-  border-radius: 4px;
-  margin-bottom: 5px;
-
-}
-
-input:required:invalid, textarea:required:invalid {
-  background: #fff no-repeat 98% center;
-  box-shadow: 0 0 5px #d45252;
-  border-color: #b03535;
-}
-
-input:required:valid, textarea:required:valid {
-  background: #fff no-repeat 98% center;
-  box-shadow: 0 0 5px #5cd053;
-  border-color: #289lf; 
-}
-
-
-/*--This is for the chart in Risk--*/
-.text_chart_header{
-color:white;
-
-}
-
-h1 {
-color: black;  
-font-weight: bold;
-
-}
-
-h2 {
-color: black;  
-font-weight: bold;
-
-}
-h3 {
-color: black;  
-font-weight: bold;
-
-}
-h4 {
-color: black;  
-font-weight: bold;
-
-}
-h5 {
-color: black;  
-font-weight: bold;
-
-}
-h6 {
-color: black;  
-font-weight: bold;
-
-}
-
-
-
-
-/*--This is for the home page for the top sentence--*/
-#hometitle { 
-    font-size: larger;
-    font-weight: bold;
-    /*text-align: center;*/
-}
-
-
 .ng-table-pager {
   display: none;
 }
@@ -153,41 +33,28 @@ font-weight: bold;
     border-top: 1px solid #E5E5E5;
 }
 
-/*This table is for the Investing Advantages*/
-table.InvestAdvantage {
+table {
   width: 100%;
-  border: 1px solid #FFFFFF;
+  border: 1px solid #000;
   font-size:10pt;
-  spacing: 5px;
-
 }
 
-.InvestAdvantage th {
-  color: white;
-  background: #37864A;
+th{
+  background: #efefef;
 }
 
-.InvestAdvantage th, td {
+th, td {
+
   text-align: center;
   vertical-align: top;
   border: 1px solid #cccccc;
   border-collapse: collapse;
-  padding: 5px;
+  padding: 0.2em;
 }
 
-.InvestAdvantage caption {
+caption {
   padding: 0.3em;
 }
-
-.Investlight {
-background:#F3F3F3;
-}
-
-.Investdark {
-background:#999999;
-/*background:#D0D1D4;*/
-}
-
 
 .tab-container{
   border-left: 1px solid #ddd;
@@ -197,86 +64,4 @@ background:#999999;
 
 }
 
-/*--This is for the How does this Work tab to alternate the colors on the tables--*/
-table.HowTables {
-  width: 100%;
-  border: 1px solid #000;
-  font-size:10pt;
-}
-
-.HowTables th {
-  text-align: center;
-  /*font-weight: bold;*/
-  background: #37864A;
-  color: white;
-}
-
-.HowTables th, td {
-    padding: 5px;
-    vertical-align: top;
-    border: 1px solid #cccccc;
-    border-collapse: collapse;
-}
-
-.HowTables td {
-    padding: 5px;
-    text-align: left;  
-}
-.HowTables caption {
-   padding: 0.3em;
-}
-
-
-.HowTables tr:nth-child(even) {
-    background-color: #eee;
-}
-
-.HowTables tr:nth-child(odd) {
-   background-color:#fff;
-}
-
-
-/*--This is for the Risk tab to alternate the colors on the tables--*/
-table.RiskTable{
-  width: 100%;
-  border:"1";
-  padding: 5px;
-  spacing: 5px;
-  border-color:"#FFFFFF";
-
-}
-
-.RiskTable th {
-  text-align: center;
-  background: #37864A;
-  color: white;
-  
-  }
-
-.RiskTable td {
-  /*text-align: left;*/
-  vertical-align: middle;
-
-}
-.RiskTable tr:nth-child(even) {
-    background-color: #D0D1D4;
-}
-
-.RiskTable tr:nth-child(odd) {
-   background-color: #F3F3F3;
-}
-
-.RiskRow{
-  width: 12%;
-  text-align: center;
-  vertical-align: middle;
-
-}
-
-
-.left {text-align: left;}
-
-.center {text-align: center;}
-
-.right{text-align: right;}
 

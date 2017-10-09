@@ -40,7 +40,7 @@ module.exports = function (grunt) {
       dev: {
         options: {
           script: 'server/app.js',
-          debug: false
+          debug: true
         }
       },
       prod: {
@@ -416,7 +416,7 @@ module.exports = function (grunt) {
         }
       },
       dist: [
-        //'imagemin',
+        'imagemin',
         'svgmin'
       ]
     },
@@ -603,18 +603,18 @@ module.exports = function (grunt) {
     'injector',
     'wiredep',
     'useminPrepare',
-    'imagemin',
+    //'imagemin',
     'autoprefixer',
     'ngtemplates',
     'concat',
     'ngAnnotate',
     'copy:dist',
-    // 'cdnify',
+    'cdnify',
     'cssmin',
     'uglify',
     'rev',
     'usemin',
-    // 'buildcontrol:pages'
+    'buildcontrol:pages'
   ]);
 
   grunt.registerTask('deploy', [

@@ -18,7 +18,7 @@ module.exports = {
     uri:    process.env.MONGOLAB_URI ||
             process.env.MONGOHQ_URL ||
             process.env.OPENSHIFT_MONGODB_DB_URL+process.env.OPENSHIFT_APP_NAME ||
-            'mongodb://kbanashek:Password1@ds111895.mlab.com:11895/heroku_cwl3k0sv'
+            'mongodb://kbanashek:Password#1@ds043991.mongolab.com:43991/heroku_app34057425'
   },
 
   seedDB: true
