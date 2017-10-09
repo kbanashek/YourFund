@@ -1,0 +1,98 @@
+<div class="col-md-3" >
+  <div class="list-group panel">
+    <a href="/gettingstarted"
+       data-toggle="collapse"
+       data-target="#demo"
+       class="list-group-item">
+      Getting Started
+      <i class="fa fa-fw fa-caret-down"></i></a>
+
+    <div id="demo" class="collapse side-nav-container">
+      <div ng-class="{ activeSidebarNav: isActive('/whatis')}" class="pad-10px"><a href="/whatis" >What is Your Fund?</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/howitworks')}" class="pad-10px"><a href="/howitworks" >How Your Fund Works?</a>
+      </div>
+      <div  ng-class="{ activeSidebarNav: isActive('/whychoose')}" class="pad-10px"><a href="/whychoose" >Why Choose Your Fund?</a>
+      </div>
+      <div  ng-class="{ activeSidebarNav: isActive('/orientation')}" class="pad-10px"><a href="/orientation" >Orientation</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/Risk')}" class="pad-10px"> <a href="/Risk" >Risk</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/GoalSetting')}" class="pad-10px"><a href="/GoalSetting" >Goal Setting</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/Pricing')}" class="pad-10px"><a href="/Pricing" >Pricing</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/Help')}" class="pad-10px"><a href="/Help" >Help</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/Aboutus')}" class="pad-10px"><a href="/Aboutus" >About us</a></div>
+    </div>
+    <a href="/main" class="list-group-item">Manage Your Fund</a>
+    <a ng-href="#" data-toggle="modal"
+       data-target="#investResearchModal"
+       class="list-group-item">
+      Investment Research</a>
+    <a href="/investmenttools"
+       data-toggle="collapse"
+       data-target="#investmentTools"
+       class="list-group-item">
+      Investment tools
+      <i class="fa fa-fw fa-caret-down"></i></a>
+    <div id="investmentTools" class="collapse side-nav-container">
+      <div ng-class="{ activeSidebarNav: isActive('/investmenttools')}" class="pad-10px"><a href="/investmenttools">Basics & Concepts</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/typesofstocks')}" class="pad-10px"> <a href="/typesofstocks">Types of Stocks</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/typesofbonds')}" class="pad-10px"><a href="/typesofbonds">Types of Bonds</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/mutualfunds')}" class="pad-10px"><a href="/mutualfunds">Mutual Funds</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/etfs')}" class="pad-10px"><a href="/etfs">ETFs</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/investmentstrategies')}" class="pad-10px"><a href="/investmentstrategies">Investment Strategies</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/financialstatements')}" class="pad-10px"><a href="/financialstatements">Financial Statements</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/analyzingstatements')}" class="pad-10px"><a href="/analyzingstatements">Analyzing Statements</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/fundamentalanalysis')}" class="pad-10px"><a href="/fundamentalanalysis">Fundamental Analysis</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/technicalanalysis')}" class="pad-10px"><a href="/technicalanalysis">Technical Analysis</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/fundamentalvstechnical')}" class="pad-10px"><a href="/fundamentalvstechnical">Fundamental vs. Technical</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/investingadvantages')}" class="pad-10px"><a href="/investingadvantages">Investing Advantages</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/assetallocation')}" class="pad-10px"><a href="/assetallocation">Asset Allocation</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/inflation')}" class="pad-10px"><a href="/inflation">Inflation</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/definitions')}" class="pad-10px"><a href="/definitions">Definitions</a></div>
+      <div ng-class="{ activeSidebarNav: isActive('/tutorials')}" class="pad-10px"><a href="/tutorials">Tutorials</a></div>
+    </div>
+    <a href="/informationexchange" class="list-group-item"> Information Exchange</a>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="investResearchModal"
+     tabindex="-1" role="dialog"
+     aria-labelledby="investResearchModal"
+     aria-hidden="true"
+     ng-controller="MainCtrl">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header panel-green-bg">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Research Page</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" role="form">
+          <div class="form-group" style="padding:10px;">
+
+            <div class="row">
+              <div class="col-sm-9">
+                <label class="control-label" for="inputSize">Name of Company or Fund</label>
+                <input type="text"
+                       ng-model="stockToResearch"
+                       class="form-control"
+                       id="symbolName"
+                       placeholder="Enter the stock symbol..."
+                       typeahead="stock.Symbol + ' - (' + stock.Name + ')' for stock in getSuggestedStocks($viewValue)"
+                       typeahead-on-select="setSelectedStockFromSuggested($item.Symbol)">
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" ng-click="researchFunds()"  data-dismiss="modal">Research</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div></div>
