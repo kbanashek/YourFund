@@ -16,24 +16,30 @@ var validateJwt = expressJwt({ secret: config.secrets.session });
 function isAuthenticated() {
   return compose()
     // Validate jwt
-    .use(function(req, res, next) {
-      // allow access_token to be passed through query parameter as well
-      if(req.query && req.query.hasOwnProperty('access_token')) {
-        req.headers.authorization = 'Bearer ' + req.query.access_token;
-      }
-      validateJwt(req, res, next);
-    })
+    // .use(function(req, res, next) {
+    //   // allow access_token to be passed through query parameter as well
+    //   if(req.query && req.query.hasOwnProperty('access_token')) {
+    //     req.headers.authorization = 'Bearer ' + req.query.access_token;
+    //   }
+    //   validateJwt(req, res, next);
+    // })
     // Attach user to request
     .use(function(req, res, next) {
-      User.findById(req.user._id, function (err, user) {
-        if (err) return next(err);
-        if (!user) return res.send(401);
-
-        req.user = user;
-        next();
-      });
+      // User.findById(req.user._id, function (err, user) {
+      //   if (err) return next(err);
+      //   if (!user) return res.send(401);
+      //
+      //   req.user = user;
+      //   next();
+      // });
     });
 }
+
+
+function authenticate(User, plainText) {
+  return User.password === plainText;
+}
+
 
 /**
  * Checks if the user role meets the minimum requirements of the route
@@ -57,7 +63,7 @@ function hasRole(roleRequired) {
  * Returns a jwt token signed by the app secret
  */
 function signToken(id) {
-  return jwt.sign({ _id: id }, config.secrets.session, { expiresInMinutes: 60*5 });
+  return jwt.sign({ _id: id }, config.secrets.session, { expiresIn: 60*5 });
 }
 
 /**
@@ -70,6 +76,7 @@ function setTokenCookie(req, res) {
   res.redirect('/');
 }
 
+exports.authenticate = authenticate;
 exports.isAuthenticated = isAuthenticated;
 exports.hasRole = hasRole;
 exports.signToken = signToken;

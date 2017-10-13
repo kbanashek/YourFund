@@ -1,9 +1,8 @@
-'use strict';
-
 var User = require('./user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
-var jwt = require('jsonwebtoken');
+var jwt = require('jwt-simple');
+var moment = require('moment');
 
 var validationError = function(res, err) {
   return res.json(422, err);
@@ -23,16 +22,30 @@ exports.index = function(req, res) {
 /**
  * Creates a new user
  */
-exports.create = function (req, res, next) {
-  var newUser = new User(req.body);
-  newUser.provider = 'local';
-  newUser.role = 'user';
-  newUser.save(function(err, user) {
-    if (err) return validationError(res, err);
-    var token = jwt.sign({_id: user._id }, config.secrets.session, { expiresInMinutes: 60*5 });
-    res.json({ token: token });
+exports.create = function (req, res) {
+
+  var user = new User(req.body);
+
+
+  user.save(function (err, result) {
+    if (err) {
+      res.status(500).send({
+        message: err.message
+      });
+    }
+    res.status(200).send({token: createToken(result)});
   });
+
 };
+
+function createToken(user){
+  var payload = {
+    sub: user._id,
+    iat: moment().unix(),
+    exp: moment().add(14, 'days').unix()
+  };
+  return jwt.encode(payload,'secret');
+}
 
 /**
  * Get a single user
