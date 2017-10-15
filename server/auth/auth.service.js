@@ -8,6 +8,7 @@ var expressJwt = require('express-jwt');
 var compose = require('composable-middleware');
 var User = require('../api/user/user.model');
 var validateJwt = expressJwt({ secret: config.secrets.session });
+var moment = require('moment');
 
 /**
  * Attaches the user object to the request if authenticated
@@ -16,30 +17,34 @@ var validateJwt = expressJwt({ secret: config.secrets.session });
 function isAuthenticated() {
   return compose()
     // Validate jwt
-    // .use(function(req, res, next) {
-    //   // allow access_token to be passed through query parameter as well
-    //   if(req.query && req.query.hasOwnProperty('access_token')) {
-    //     req.headers.authorization = 'Bearer ' + req.query.access_token;
-    //   }
-    //   validateJwt(req, res, next);
-    // })
+
     // Attach user to request
     .use(function(req, res, next) {
-      // User.findById(req.user._id, function (err, user) {
-      //   if (err) return next(err);
-      //   if (!user) return res.send(401);
-      //
-      //   req.user = user;
-      //   next();
-      // });
+
+      if(!req.header('Authorization')) {
+        return res.status(401).send({message: 'Please make sure your request has an Authorization header'});
+      }
+
+      var token = req.header('Authorization').split(' ')[1];
+
+      var payload = jwt.decode(token, 'secret');
+
+      if(payload.exp <= moment().unix()){
+        return res.status(401).send({message: 'Token has expired'});
+      }
+
+      var user = new User();
+      user.token = payload.sub;
+      req.user = user;
+
+      next();
+
     });
 }
-
 
 function authenticate(User, plainText) {
   return User.password === plainText;
 }
-
 
 /**
  * Checks if the user role meets the minimum requirements of the route

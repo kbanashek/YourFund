@@ -1,6 +1,5 @@
 var User = require('./user.model');
 var passport = require('passport');
-var config = require('../../config/environment');
 var jwt = require('jwt-simple');
 var moment = require('moment');
 
@@ -26,13 +25,13 @@ exports.create = function (req, res) {
 
   var user = new User(req.body);
 
-
   user.save(function (err, result) {
     if (err) {
       res.status(500).send({
         message: err.message
       });
     }
+    var vm = this;
     res.status(200).send({token: createToken(result)});
   });
 
@@ -96,10 +95,10 @@ exports.changePassword = function(req, res, next) {
  * Get my info
  */
 exports.me = function(req, res, next) {
-  var userId = req.user._id;
+  var userId = req.user.token;
   User.findOne({
     _id: userId
-  }, '-salt -hashedPassword', function(err, user) { // don't ever give out the password or salt
+  }, function(err, user) { // don't ever give out the password or salt
     if (err) return next(err);
     if (!user) return res.json(401);
     res.json(user);
