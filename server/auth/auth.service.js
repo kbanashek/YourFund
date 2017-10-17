@@ -1,7 +1,6 @@
 'use strict';
 
 var mongoose = require('mongoose');
-var passport = require('passport');
 var config = require('../config/environment');
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
@@ -28,17 +27,19 @@ function isAuthenticated() {
       var token = req.header('Authorization').split(' ')[1];
 
       var payload = jwt.decode(token, 'secret');
+      var userId = payload._id;
 
       if(payload.exp <= moment().unix()){
         return res.status(401).send({message: 'Token has expired'});
       }
 
-      var user = new User();
-      user.token = payload.sub;
-      req.user = user;
-
-      next();
-
+      User.findById(userId, function (err, user) {
+        if (err) return next(err);
+        if (!user) return res.send(401);
+        user.token = payload.sub;
+        req.user = user;
+        next();
+      });
     });
 }
 
@@ -71,18 +72,9 @@ function signToken(id) {
   return jwt.sign({ _id: id }, config.secrets.session, { expiresIn: 60*5 });
 }
 
-/**
- * Set token cookie directly for oAuth strategies
- */
-function setTokenCookie(req, res) {
-  if (!req.user) return res.json(404, { message: 'Something went wrong, please try again.'});
-  var token = signToken(req.user._id, req.user.role);
-  res.cookie('token', JSON.stringify(token));
-  res.redirect('/');
-}
 
 exports.authenticate = authenticate;
 exports.isAuthenticated = isAuthenticated;
 exports.hasRole = hasRole;
 exports.signToken = signToken;
-exports.setTokenCookie = setTokenCookie;
+

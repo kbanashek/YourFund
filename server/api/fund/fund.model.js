@@ -1,9 +1,8 @@
 'use strict';
 
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema;
+var mongoose = require('mongoose');
 
-var fundSchema = new Schema({
+module.exports =   mongoose.model('Funds',{
   name: "string",
   originalGoal: Number,
   goal: Number,
@@ -17,4 +16,4 @@ var fundSchema = new Schema({
   percentLeftToInvest: Number
 });
 
-module.exports = mongoose.model('Funds', fundSchema);
+
