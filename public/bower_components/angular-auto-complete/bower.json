@@ -1,0 +1,26 @@
+{
+  "name": "angular-auto-complete",
+  "version": "1.4.2",
+  "description": "AngularJS auto-complete plugin",
+  "main": "angular-auto-complete.js",
+  "homepage": "http://www.vickram.me/angularjs-auto-complete-plugin/",
+  "authors": [
+    "Vickram Ravichandran (http://vickram.me)"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "auto complete",
+    "auto suggest",
+    "directive",
+    "plugin",
+    "dropdown"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
