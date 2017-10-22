@@ -152,27 +152,35 @@ function UpdatePreInitializedFunds(selectedFund, req, updatedFund) {
   var selectedFundCash = selectedFund.goal;
   var investmentUpdateCount = 0;
 
-  selectedFund.stocks.forEach(function (stock) {
+  selectedFund.stocks.forEach(function (result) {
 
+    var stock = result;
     console.log('GetStockCurrentPrice: updating DB with current price for: ' + stock.symbol);
 
     var stockRequestOptions = {
-      url: 'http://finance.google.com/finance/info?q=' + stock.symbol,
+      url: 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol='+ stock.symbol +'&interval=1min&apikey=9H0I0TU7JPPVUHGB',
       json: true
     };
 
     Request(stockRequestOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
-        var result = JSON.parse(body.replace("//", ""));
 
-        req.body.exchange = result[0].e;
-        req.body.price = result[0].l; //Stock price
+        var result = response.body["Time Series (1min)"];
+        var stocks = Object.keys(result).map(function(key) {
+          return [Number(key), result[key]];
+        });
+
+        var currentStock = {};
+        currentStock.price = stocks["0"]["1"]["1. open"];
+        var closePrice = stocks["0"]["1"]["4. close"];
+
+        req.body.exchange = 'unavailable';
+        req.body.price =  currentStock.price ; //Stock price
         var cashForPurchase = (selectedFund.goal * (stock.originalPercentOfFund / 100)); //goal is total amount invested
         var sharesToPurchase = (cashForPurchase / req.body.price) * 100 / 100;
         req.body.numberOfShares = sharesToPurchase;
-        req.body.change = result[0].c; //Stock change
+        req.body.change = closePrice; //Stock change
         var investmentAmount = req.body.numberOfShares * req.body.price; //Money invested
-        //var percentOfFund = investmentAmount / selectedFund.goal * 100; //percent of fund allocated
 
         selectedFundCash -= cashForPurchase;
 
@@ -189,12 +197,7 @@ function UpdatePreInitializedFunds(selectedFund, req, updatedFund) {
               'stocks.$.created': Date(),
               'stocks.$.currentPrice': req.body.price,
               'stocks.$.numberOfShares': req.body.numberOfShares,
-              'stocks.$.currentNumberOfShares': req.body.numberOfShares,
-
-              //'stocks.$.currentPercentOfFund': percentOfFund,
-              //'stocks.$.originalPercentOfFund': percentOfFund,
-              //'stocks.$.currentCashInvestment': (req.body.numberOfShares * req.body.price) * 100 / 100,
-              //'stocks.$.originalCashInvestment': (req.body.numberOfShares * req.body.price) * 100 / 100
+              'stocks.$.currentNumberOfShares': req.body.numberOfShares
             }
           },
           function (err, result) {
@@ -211,8 +214,8 @@ function UpdatePreInitializedFunds(selectedFund, req, updatedFund) {
             }
           });
       }
-    })
-  })
+    });
+  });
 }
 
 function logFundCashUpdate(updatedFund, action, cashDifference, res) {

@@ -25,7 +25,7 @@ exports.show = function (req, res) {
   var symbol = req.params.id;
 
   var options = {
-    url: 'http://finance.google.com/finance/info?q=' + symbol,
+    url: 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol='+ symbol +'&interval=1min&apikey=9H0I0TU7JPPVUHGB',
     json: true
   };
 
@@ -33,14 +33,21 @@ exports.show = function (req, res) {
 
   Request(options, function (error, response, body) {
     if (!error && response.statusCode === 200) {
-      var result = JSON.parse(body.replace("//", ""));
+      var result = response.body["Time Series (1min)"];
 
       console.log('Returned stock:' + symbol );
 
+      var stocks = Object.keys(result).map(function(key) {
+        return [Number(key), result[key]];
+      });
+
       var stock = {};
-      stock.currentPrice = result[0].l;
+      stock.currentPrice = stocks["0"]["1"]["1. open"];
 
       return res.json(200, stock);
+    }
+    else{
+      return res.json(500);
     }
   });
 };
@@ -78,7 +85,7 @@ function setPercentLeftToInvest(selectedFund) {
     }
   });
 
-  selectedFund.set({"percentLeftToInvest": remainingInvestment});
+  selectedFund.percentLeftToInvest = remainingInvestment;
 }
 
 exports.create = function (req, res) {
@@ -90,32 +97,43 @@ exports.create = function (req, res) {
   var user = req.user;
 
   var options = {
-    url: 'http://finance.google.com/finance/info?q=' + symbol,
+    url: 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol='+ symbol +'&interval=1min&apikey=9H0I0TU7JPPVUHGB',
     json: true
   };
 
   Request(options, function (error, response, body) {
     if (!error && response.statusCode === 200) {
-      var result = JSON.parse(body.replace("//", ""));
 
-      console.log("stockConroller.add - returning result for symbol:" + symbol + " ["  + JSON.stringify(body) + "]");
+      var result = response.body["Time Series (1min)"];
 
-      fund.findById(req.body.fundId, function (err, selectedFund) {
+      console.log('Adding stock:' + symbol );
+
+      var stocks = Object.keys(result).map(function(key) {
+        return [Number(key), result[key]];
+      });
+
+      var stock = {};
+      stock.currentPrice = stocks["0"]["1"]["1. open"];
+      var closePrice = stocks["0"]["1"]["4. close"];
+
+      fund.findById(req.body.fundId, function (err, result) {
         if (err) {
           return handleError(res, err);
         }
-        if (!selectedFund) {
+        if (!result) {
           return res.send(404);
         }
 
+        var selectedFund = result._doc;
+
         console.log('Adding stock:' + req.body.symbol + ' to fund: ' + selectedFund.Name);
 
-        req.body.exchange = result[0].e;
-        req.body.price = result[0].l;
+        req.body.exchange = 'unknown';
+        req.body.price = stock.currentPrice ;
         var cashForPurchase = req.body.tradeAmountCash;
         var sharesToPurchase = (cashForPurchase / req.body.price) * 100 / 100;
         req.body.numberOfShares = sharesToPurchase;
-        req.body.change = result[0].c;
+        req.body.change = closePrice;
 
 
         Stock.create(req.body, function (err, stock) {
@@ -146,7 +164,8 @@ exports.create = function (req, res) {
 
           setPercentLeftToInvest(selectedFund);
 
-          selectedFund.save(function (e) {
+          result._doc = selectedFund;
+          result.save(function (e) {
             if (e) {
               return handleError(res, err);
             }
@@ -156,11 +175,11 @@ exports.create = function (req, res) {
             var description = stock.action + ' ' + stock.description + ' ' + stock.numberOfShares.toFixedDown(2) + ' shares at $' +  stock.price;
 
             if(stock.action == 'buy' || stock.action == 'Buy'){
-              stock.action = 'Buy'
+              stock.action = 'Buy';
             }
             else
             {
-              stock.action = 'Sell'
+              stock.action = 'Sell';
             }
 
             if(selectedFund.finalized){
