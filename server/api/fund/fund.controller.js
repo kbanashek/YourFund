@@ -86,7 +86,7 @@ function UpdateInitializedFunds(selectedFund, res, updatedFund) {
     console.log('executing: fund.UpdateInitializedFunds');
 
     var stockRequestOptions = {
-      url: 'http://finance.google.com/finance/info?q=' + stock.symbol,
+      url: 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol='+ stock.symbol +'&interval=1min&apikey=9H0I0TU7JPPVUHGB',
       json: true
     };
 
@@ -95,8 +95,14 @@ function UpdateInitializedFunds(selectedFund, res, updatedFund) {
     Request(stockRequestOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
 
-          var result = JSON.parse(body.replace("//", ""));
-          var currentPrice = result[0].l;
+          var result = response.body["Time Series (1min)"];
+          var stocks = Object.keys(result).map(function(key) {
+            return [Number(key), result[key]];
+          });
+
+          var currentPrice = stocks["0"]["1"]["1. open"];
+          var closePrice = stocks["0"]["1"]["4. close"];
+
           console.log('GetStockCurrentPrice: current price for: ' + stock.symbol + ' - ' + currentPrice);
 
 
