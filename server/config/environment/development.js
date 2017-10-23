@@ -9,5 +9,5 @@ module.exports = {
     uri: 'mongodb://kbanashek:Password1@ds111895.mlab.com:11895/heroku_cwl3k0sv'
   },
 
-  seedDB: true
+  seedDB: false
 };
