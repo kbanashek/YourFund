@@ -96,6 +96,11 @@ function UpdateInitializedFunds(selectedFund, res, updatedFund) {
         if (!error && response.statusCode === 200) {
 
           var result = response.body["Time Series (1min)"];
+
+          if(result){
+
+          }
+          
           var stocks = Object.keys(result).map(function(key) {
             return [Number(key), result[key]];
           });
